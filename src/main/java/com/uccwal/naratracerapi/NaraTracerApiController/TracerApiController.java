@@ -35,6 +35,9 @@ public class TracerApiController {
     @GetMapping("/tracerData")
     public List<TracerApiEntity> getTracerData() {
         // MongoDB에서 데이터 조회
+
+        //List<TracerApiEntity> tracerData = mongoTemplate.findAll(TracerApiEntity.class);
+        //return tracerData;
         return mongoTemplate.findAll(TracerApiEntity.class);
     }
 
@@ -50,24 +53,24 @@ public class TracerApiController {
             orCriterias.add(Criteria.where("category").is(tracerApiEntity.getCategory()));
         }
 
-        // Bidder 검색 조건 추가
+        // Bidder (기존 DemandAgency) 검색 조건 추가
         if (tracerApiEntity.getBidder() != null && tracerApiEntity.getBidder().length > 0) {
             List<String> bidders = Arrays.asList(tracerApiEntity.getBidder());
             orCriterias.add(Criteria.where("bidder").regex(".*" + String.join("|", bidders) + ".*", "i"));
         }
 
-        // TitleLinkText 검색 조건 추가
+        // TitleLinkText (기존 AnnouncementName) 검색 조건 추가
         if (tracerApiEntity.getTitleLinkText() != null && tracerApiEntity.getTitleLinkText().length > 0) {
             List<String> titleLinkTexts = Arrays.asList(tracerApiEntity.getTitleLinkText());
             orCriterias.add(Criteria.where("titleLinkText").regex(".*" + String.join("|", titleLinkTexts) + ".*", "i"));
         }
 
-        // bidStart 검색 조건 추가
+        // 기존의 bidStart 및 endDate 검색 조건 추가
         if (tracerApiEntity.getStartDate() != null && tracerApiEntity.getEndDate() != null) {
             orCriterias.add(Criteria.where("bidStart").gte(tracerApiEntity.getStartDate()).lte(tracerApiEntity.getEndDate()));
         }
 
-        
+        // 다른 검색 조건들 추가...
 
         if (!orCriterias.isEmpty()) {
             query.addCriteria(new Criteria().andOperator(orCriterias.toArray(new Criteria[0])));
@@ -75,6 +78,8 @@ public class TracerApiController {
 
         logger.info(String.valueOf(query));
 
+        //List<TracerApiEntity> searchResult = mongoTemplate.find(query, TracerApiEntity.class);
+        //return searchResult;
         return mongoTemplate.find(query, TracerApiEntity.class);
     }
 }
