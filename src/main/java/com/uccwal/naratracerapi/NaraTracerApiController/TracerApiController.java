@@ -50,24 +50,24 @@ public class TracerApiController {
             orCriterias.add(Criteria.where("category").is(tracerApiEntity.getCategory()));
         }
 
-        // Bidder (기존 DemandAgency) 검색 조건 추가
+        // Bidder 검색 조건 추가
         if (tracerApiEntity.getBidder() != null && tracerApiEntity.getBidder().length > 0) {
             List<String> bidders = Arrays.asList(tracerApiEntity.getBidder());
             orCriterias.add(Criteria.where("bidder").regex(".*" + String.join("|", bidders) + ".*", "i"));
         }
 
-        // TitleLinkText (기존 AnnouncementName) 검색 조건 추가
+        // TitleLinkText 검색 조건 추가
         if (tracerApiEntity.getTitleLinkText() != null && tracerApiEntity.getTitleLinkText().length > 0) {
             List<String> titleLinkTexts = Arrays.asList(tracerApiEntity.getTitleLinkText());
             orCriterias.add(Criteria.where("titleLinkText").regex(".*" + String.join("|", titleLinkTexts) + ".*", "i"));
         }
 
-        // 기존의 bidStart 및 endDate 검색 조건 추가
+        // bidStart 검색 조건 추가
         if (tracerApiEntity.getStartDate() != null && tracerApiEntity.getEndDate() != null) {
             orCriterias.add(Criteria.where("bidStart").gte(tracerApiEntity.getStartDate()).lte(tracerApiEntity.getEndDate()));
         }
 
-        // 다른 검색 조건들 추가...
+        
 
         if (!orCriterias.isEmpty()) {
             query.addCriteria(new Criteria().andOperator(orCriterias.toArray(new Criteria[0])));
